@@ -10,8 +10,8 @@ const Stack = createStackNavigator();
 export const Routing: React.FC = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Mapa" component={Maper} />
+            <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
+            <Stack.Screen name="Mapa" options={{headerShown: false}} component={Maper} />
         </Stack.Navigator>
     )
 }
