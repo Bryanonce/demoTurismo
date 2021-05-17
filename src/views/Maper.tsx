@@ -20,6 +20,11 @@ export const Maper: React.FC = () => {
         longitude: -79.888499,
     }
 
+    const floresta: IGps = {
+        latitude: -2.256177,
+        longitude: -79.886170,
+    }
+
     const [gpsState, setGpsState] = useState<IGps>(gps);
     const [gpsMe, setGpsMe] = useState<IGps>(gps);
     const [gpsCenter, setGpsCenter] = useState<IGps>(gps)
