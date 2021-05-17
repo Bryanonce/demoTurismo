@@ -29,7 +29,7 @@ export const MarkerReferences = ():ILocationRef[]=> [
         lon: -79.885260
     },
     {
-        name: 'Terminal Terrestre',
+        name: 'Mega Kiwi',
         description: 'Description 4',
         type: 'turismo',
         lat: -2.141445,

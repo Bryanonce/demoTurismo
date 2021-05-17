@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { FieldValues, UseFormReset } from 'react-hook-form'
 import { Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -9,12 +9,13 @@ interface ISearchProps {
     filter: ILocationRef[],
     setFilter: React.Dispatch<React.SetStateAction<ILocationRef[]>>,
     setGpsState: React.Dispatch<React.SetStateAction<IGps>>,
-    reset: UseFormReset<FieldValues>
+    reset: UseFormReset<FieldValues>,
+    setDetalle: React.Dispatch<React.SetStateAction<string>>,
+    setGpsCenter: React.Dispatch<React.SetStateAction<IGps>>,
+    gpsState: IGps
 }
 
-export const SearchResult: React.FC<ISearchProps> = ({ filter, setFilter, setGpsState, reset }: ISearchProps) => {
-
-
+export const SearchResult: React.FC<ISearchProps> = ({ filter, setFilter, setGpsState, reset, setDetalle, setGpsCenter, gpsState }: ISearchProps) => {
 
     return (
         <View
@@ -33,6 +34,10 @@ export const SearchResult: React.FC<ISearchProps> = ({ filter, setFilter, setGps
                                     latitude: location.lat,
                                     longitude: location.lon
                                 })
+                                setGpsCenter({
+                                    ...gpsState
+                                })
+                                setDetalle(location.name)
                                 reset()
                                 setFilter([])
                             }}

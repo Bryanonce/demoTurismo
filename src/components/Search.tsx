@@ -12,14 +12,17 @@ interface ISearchProps {
         text: StyleProp<TextStyle>,
         input: StyleProp<TextStyle>
     },
-    setGpsState: React.Dispatch<React.SetStateAction<IGps>>
+    setGpsState: React.Dispatch<React.SetStateAction<IGps>>,
+    setDetalle: React.Dispatch<React.SetStateAction<string>>,
+    setGpsCenter: React.Dispatch<React.SetStateAction<IGps>>,
+    gpsState: IGps
 }
 
 interface IData {
     search: string
 }
 
-export const Search: React.FC<ISearchProps> = ({ styles, setGpsState }: ISearchProps) => {
+export const Search: React.FC<ISearchProps> = ({ styles, setGpsState, setDetalle, setGpsCenter, gpsState }: ISearchProps) => {
 
     const { control, handleSubmit, reset } = useForm();
     const markers = MarkerReferences();
@@ -62,10 +65,13 @@ export const Search: React.FC<ISearchProps> = ({ styles, setGpsState }: ISearchP
             {
                 (setFilter.length > 0) ?
                     <SearchResult
+                        setGpsCenter={setGpsCenter}
                         setGpsState={setGpsState}
+                        gpsState={gpsState}
                         filter={filter}
                         reset={reset}
                         setFilter={setFilter}
+                        setDetalle={setDetalle}
                     />
                     :
                     null

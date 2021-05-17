@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Image, ImageSourcePropType, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions';
+import { Detail } from '../components/Detail';
 import { Search } from '../components/Search';
 import { MarkerReferences } from '../db/db';
 const GOOGLE_MAPS_APIKEY = "AIzaSyBOgXn4lc_aY6wvfqGWi74nRs-cf0FdMkg"
@@ -13,14 +14,16 @@ export interface IGps {
 
 export const Maper: React.FC = () => {
     const markers = MarkerReferences();
-    
-    const gps:IGps = {
+
+    const gps: IGps = {
         latitude: -2.138788,
         longitude: -79.888499,
     }
 
-    
     const [gpsState, setGpsState] = useState<IGps>(gps);
+    const [gpsMe, setGpsMe] = useState<IGps>(gps);
+    const [gpsCenter, setGpsCenter] = useState<IGps>(gps)
+    const [detalle, setDetalle] = useState<string>("");
 
     const chooseDir = (type: string): ImageSourcePropType => {
         switch (type) {
@@ -39,8 +42,11 @@ export const Maper: React.FC = () => {
         <View style={{
             flex: 1
         }}>
-            <Search 
+            <Search
+                gpsState={gpsMe}
+                setGpsCenter={setGpsCenter}
                 setGpsState={setGpsState}
+                setDetalle={setDetalle}
                 styles={{
                     bg: {
                         backgroundColor: '#fff',
@@ -64,8 +70,9 @@ export const Maper: React.FC = () => {
                 }}
             />
             <MapView
+                moveOnMarkerPress={false}
                 region={{
-                    ...gpsState,
+                    ...gpsCenter,
                     latitudeDelta: 0.009,
                     longitudeDelta: 0.000921
                 }}
@@ -87,10 +94,16 @@ export const Maper: React.FC = () => {
                                 }}
                                 title={marker.name}
                                 description={marker.description}
-                                onPress={()=>setGpsState({
-                                    latitude: marker.lat,
-                                    longitude: marker.lon
-                                })}
+                                onPress={() => {
+                                    setGpsState({
+                                        latitude: marker.lat,
+                                        longitude: marker.lon
+                                    })
+                                    setGpsCenter({
+                                        ...gpsMe
+                                    })
+                                    setDetalle(marker.name)
+                                }}
                             >
                                 <Image
                                     source={chooseDir(type)}
@@ -105,19 +118,46 @@ export const Maper: React.FC = () => {
                 }
 
                 <Marker
-                    coordinate={gps}
+                    coordinate={gpsMe}
                     title="Yo"
                     description="Posicion Inicial"
-                />
+                    draggable={true}
+                    onDragEnd={({ nativeEvent }) => {
+                        setGpsMe({
+                            latitude: nativeEvent.coordinate.latitude,
+                            longitude: nativeEvent.coordinate.longitude
+                        })
+                        setGpsCenter({
+                            latitude: nativeEvent.coordinate.latitude,
+                            longitude: nativeEvent.coordinate.longitude
+                        })
+                    }}
+                >
+                    <Image
+                        source={require("../icons/car-solid.jpg")}
+                        style={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: 15
+                        }}
+                    />
+                </Marker>
 
                 <MapViewDirections
-                    origin={gps}
+                    origin={gpsMe}
                     strokeColor="green"
                     strokeWidth={3}
                     destination={gpsState}
                     apikey={GOOGLE_MAPS_APIKEY}
+                    mode="DRIVING"
                 />
             </MapView>
+            <Detail 
+                detalle={detalle}
+                onPress={()=>setGpsCenter({
+                    ...gpsState
+                })}
+            />
         </View>
     )
 }
